@@ -26,7 +26,7 @@ python3 manage.py migrate
 
 Acess:
 ```
-http://localhost:1234
+http://localhost:8000
 ```
 
 ## 📦 Dependencies
