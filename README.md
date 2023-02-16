@@ -1,6 +1,8 @@
 ![Badge](https://img.shields.io/static/v1?label=Django&message=framework&color=blue&style=for-the-badge&logo=DJANGO)
 ![Badge](https://img.shields.io/static/v1?label=python&message=language&color=red&style=for-the-badge&logo=PYTHON)
+![Badge](https://img.shields.io/static/v1?label=docker&message=virtualization&color=red&style=for-the-badge&logo=DOCKER)
 ![Badge](https://img.shields.io/static/v1?label=MIT&message=LICENSE&color=yellow&style=for-the-badge)
+
 
 # Estágio Hoje
 
