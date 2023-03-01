@@ -1,8 +1,26 @@
 version: "3.7"
 
 services:    
+  mongodb:
+    container_name: bwt_mongodb
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - ./local_db/db_backup/mongorestore.sh:/docker-entrypoint-initdb.d/mongorestore.sh
+      - ./local_db/db_backup/dump:/dump
+    # environment:
+      # - MONGO_INITDB_DATABASE=estagio_hoje
+      # - MONGO_INITDB_ROOT_USERNAME=admin
+      # - MONGO_INITDB_ROOT_PASSWORD=admin
+    command: mongod --quiet --logpath /dev/null
+    networks:
+      - backend
+
   backtend_website_template:
     container_name: bwt
+    # build: .
     image: backtend_website_template_image
     restart: always
     command: python3 manage.py runserver 0.0.0.0:8000
