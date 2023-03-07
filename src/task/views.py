@@ -1,45 +1,57 @@
+from django.core import serializers
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.http import HttpResponse, HttpRequest, JsonResponse
+from rest_framework.parsers import JSONParser
+
 from .models import Task
 from .forms import TaskForm
-from django.http import HttpResponse
-import json
-from django.core import serializers
+from .serializers import TaskSerializer
 
 # Create your views here.
 
 # Create a task
-def task_create(request):
-    print(f"request = {request}")
-    form = TaskForm(request)
-    form.save()
-    # return HttpResponse(str(request.POST))
-    if request.method == "POST":
-        print(f"request.POST = {request.POST}")
-        print(f"request.query_params = {request.query_params}")
-        form = TaskForm(request.POST)
-        print(f"form = {form}")
-        if form.is_valid():
-            form.save()
-            return redirect(reverse(":task_list"))
-        else:
-            print(f"form.errors = {form.errors}")
-    else:
-        form = TaskForm()
+def task_create(request: HttpRequest):
+    # print(f"request = {request}")
+    # print(request.POST)
+    # return HttpResponse(request.POST)
+    task_data = JSONParser().parse(request)
 
-    return HttpResponse('task criada!')
+    print(task_data)
+    task_serializer=TaskSerializer(data=task_data)
+    if task_serializer.is_valid():
+        task_serializer.save()
+        return JsonResponse("Added Successfully \n\r"+str(task_data),safe=False)
+    return JsonResponse("Failed to Add \n\r"+str(task_data),safe=False)
+    # form.save()
+    # # return HttpResponse(str(request.POST))
+    # if request.method == "POST":
+    #     print(f"request.POST = {request.POST}")
+    #     print(f"request.query_params = {request.query_params}")
+    #     form = TaskForm(request.POST)
+    #     print(f"form = {form}")
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect(reverse(":task_list"))
+    #     else:
+    #         print(f"form.errors = {form.errors}")
+    # else:
+    #     form = TaskForm()
+
+    return HttpResponse(str(form))
     # return render(request, "tasks/task_form.html", { "form": form, })
 
 
 # Retrieve task list
-def task_list(request):
-
+def task_list(request: HttpRequest):
+    print(Task.objects.all())
     queryset = serializers.serialize("json",Task.objects.all())
+    print(queryset)
     context = {
         'queryset': queryset
     }
-    context = json.dumps(queryset, default=str)
-    return HttpResponse(context)
+    # context = json.dumps(queryset, default=str)
+
     # queryset = Task.objects.all()
     # context ={
     #     'queryset': queryset
@@ -53,7 +65,7 @@ def task_list(request):
     # instance = get_object_or_404(Task, id=name)
 
     # tasks = Task.objects.all()
-    return HttpResponse(instance)
+    return HttpResponse(context)
     # return render(request, "tasks/task_list.html", { "tasks": tasks,})
 
 

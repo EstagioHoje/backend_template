@@ -41,14 +41,14 @@ INSTALLED_APPS = (
     'rest_framework',
     'coreapi',
     'src',
-    'task',
+    'src.task',
 )
 
 MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'cfg.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-DB_NAME = 'mongodb://localhost:27017/estagio_hoje'
+# DB_NAME = 'mongodb://localhost:27018/estagio_hoje'
 
 DATABASES = {
     'default': {

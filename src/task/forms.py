@@ -7,6 +7,7 @@ class TaskForm(forms.ModelForm):
         model = Task
         #fields = "__all__"
         fields = [
+            'task_id',
 			'name',
     		'course'
 		]

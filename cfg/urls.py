@@ -4,5 +4,5 @@ from src.main import hello_world
 
 urlpatterns = [
     path(r'', hello_world),
-    path('task/', include('task.urls'))
+    path('task/', include('src.task.urls'))
 ]
