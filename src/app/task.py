@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class TaskConfig(AppConfig):
-    name = 'src.task'
+    name = 'src.app.task'

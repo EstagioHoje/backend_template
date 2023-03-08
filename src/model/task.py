@@ -8,7 +8,7 @@ class Status(models.TextChoices):
 
 class Task(models.Model):
     # DepartmentId = models.AutoField(primary_key=True)
-    task_id = models.AutoField(primary_key=True)
+    # task_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=65)
     course = models.CharField(max_length=100)
 

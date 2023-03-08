@@ -1,23 +1,25 @@
 from django.core import serializers
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from rest_framework.parsers import JSONParser
 
-from .models import Task
-from .forms import TaskForm
-from .serializers import TaskSerializer
+from ..model.task import Task
+
+from ..serializer.task import TaskSerializer
 
 # Create your views here.
 
 # Create a task
+# @csrf_exempt
 def task_create(request: HttpRequest):
     # print(f"request = {request}")
     # print(request.POST)
     # return HttpResponse(request.POST)
     task_data = JSONParser().parse(request)
 
-    print(task_data)
+    # print(task_data)
     task_serializer=TaskSerializer(data=task_data)
     if task_serializer.is_valid():
         task_serializer.save()
@@ -44,12 +46,10 @@ def task_create(request: HttpRequest):
 
 # Retrieve task list
 def task_list(request: HttpRequest):
-    print(Task.objects.all())
-    queryset = serializers.serialize("json",Task.objects.all())
-    print(queryset)
-    context = {
-        'queryset': queryset
-    }
+    task = Task.objects.all()
+    
+    task_serializer=TaskSerializer(task,many=True)
+    return JsonResponse(task_serializer.data,safe=False)
     # context = json.dumps(queryset, default=str)
 
     # queryset = Task.objects.all()
@@ -77,20 +77,22 @@ def task_detail(request, pk):
 
 # Update a single task
 def task_update(request, pk):
-    task_obj = get_object_or_404(Task, pk=pk)
-    if request.method == 'POST':
-        form = TaskForm(instance=task_obj, data=request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect(reverse("tasks:task_detail", args=[pk,]))
-    else:
-        form = TaskForm(instance=task_obj)
+    # task_obj = get_object_or_404(Task, pk=pk)
+    # if request.method == 'POST':
+    #     form = TaskForm(instance=task_obj, data=request.POST)
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect(reverse("tasks:task_detail", args=[pk,]))
+    # else:
+    #     form = TaskForm(instance=task_obj)
 
-    return render(request, "tasks/task_form.html", { "form": form, "object": task_obj})
+    # return render(request, "tasks/task_form.html", { "form": form, "object": task_obj})
+    return True
 
 
 # Delete a single task
 def task_delete(request, pk):
-    task_obj = get_object_or_404(Task, pk=pk)
-    task_obj.delete()
-    return redirect(reverse("tasks:task_list"))
+    # task_obj = get_object_or_404(Task, pk=pk)
+    # task_obj.delete()
+    # return redirect(reverse("tasks:task_list"))
+    return True
