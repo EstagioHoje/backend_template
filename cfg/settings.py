@@ -41,7 +41,9 @@ INSTALLED_APPS = (
     'rest_framework',
     'coreapi',
     'src',
-    'src.task',
+    'src.app.student',
+    'src.app.task',
+    "drf_yasg",
 )
 
 MIDDLEWARE = (
@@ -136,8 +138,10 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Add these new lines
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'static'),
+# )
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True

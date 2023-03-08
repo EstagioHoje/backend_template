@@ -4,3 +4,4 @@ django==3.2.9
 coreapi
 djongo
 pymongo==3.12.1
+drf_yasg==1.21.5
