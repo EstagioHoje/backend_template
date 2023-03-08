@@ -41,8 +41,6 @@ INSTALLED_APPS = (
     'rest_framework',
     'coreapi',
     'src',
-    'src.app.student',
-    'src.app.task',
     "drf_yasg",
 )
 
