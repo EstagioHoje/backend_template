@@ -91,7 +91,7 @@ DATABASES = {
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
             # 'host': 'mongodb://admin:admin@localhost:27017/estagio_hoje?authMechanism=SCRAM-SHA-1&authSource=admin&retryWrites=true&w=majority',
-            'host': 'mongodb://bwt_mongodb:27017/estagio_hoje',
+            'host': 'mongodb://ec2-3-15-1-197.us-east-2.compute.amazonaws.com:27017/estagio_hoje',
         }
     }
 }

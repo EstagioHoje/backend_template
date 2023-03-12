@@ -3,8 +3,9 @@ version: "3.7"
 services:    
   backtend_website_template:
     container_name: bwt
+    # build: .
     image: backtend_website_template_image
-    restart: always
+    restart: unless-stopped
     command: python3 manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/usr/src/app/
@@ -34,8 +35,6 @@ services:
     command: python3 manage.py makemigrations
     volumes:
       - .:/usr/src/app/
-    depends_on:
-      - mongodb
     networks:
       - backend
 
