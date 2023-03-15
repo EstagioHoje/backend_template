@@ -31,6 +31,11 @@ http://localhost:8000
 
 ## 📦 Dependencies
 
+### 🐋 Docker 
+Seguir esse guia
+```
+https://phoenixnap.com/kb/install-docker-on-ubuntu-20-04
+```
 ### 🐋 Docker Compose
 
 ```sh
@@ -43,3 +48,7 @@ To verify that the installation was successful, you can run:
 ```sh
 docker-compose --version
 ```
+#### Bug Docker-compose
+
+In some cases, on EC2, docker compose might need to add some permissions. In this stackoverflow thread explain how to add the correct permission:
+https://stackoverflow.com/questions/64662372/docker-compose-up-error-while-fetching-server-api-version-connection-abort
