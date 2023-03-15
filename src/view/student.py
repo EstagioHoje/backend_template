@@ -1,10 +1,11 @@
 from rest_framework.decorators import api_view
+from rest_framework.parsers import JSONParser  
 from django.http import HttpRequest
 from django.views import View
 from drf_yasg.utils import swagger_auto_schema
 import uuid
 from ..model.student import Student
-from ..serializer.student import StudentSerializer
+from ..serializer.student import StudentSerializer, CPFSerializer
 from ..util.response import ResponseHandler
 
 TAG_NAME = "Student"
@@ -25,6 +26,7 @@ class StudentView(View):
     @swagger_auto_schema(
             method='GET',
             operation_description="GET /student/get/",
+            query_serializer=CPFSerializer,
             tags=[TAG_NAME],
             )
     @api_view(['GET'])
@@ -79,6 +81,7 @@ class StudentView(View):
     @swagger_auto_schema(
             method='DELETE',
             operation_description="DELETE /student/delete/",
+            query_serializer=CPFSerializer,
             tags=[TAG_NAME],
             )
     @api_view(['DELETE'])
