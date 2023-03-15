@@ -1,19 +1,12 @@
+from rest_framework.decorators import api_view
 from django.http import HttpRequest
+from django.views import View
+from drf_yasg.utils import swagger_auto_schema
+import uuid
 from ..model.student import Student
 from ..serializer.student import StudentSerializer
-from bson.objectid import ObjectId
-import uuid
-from rest_framework.views import APIView
 from ..util.response import ResponseHandler
 
-# Create your views here.
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework.decorators import api_view
-from django.utils.decorators import method_decorator
-from django.views import View
-
-
-# @method_decorator(name="teste")
 TAG_NAME = "Student"
 class StudentView(View):
 

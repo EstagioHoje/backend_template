@@ -6,12 +6,12 @@ from drf_yasg import openapi
 
 
 schema_info = openapi.Info(
-    title="Swagger First Blog ",
+    title="InternshipToday API",
     default_version='v1',
-    description="Test Swagger First Blog",
+    description="InternshipTodayFirst Blog",
     terms_of_service="https://www.ourapp.com/policies/terms/",
-    contact=openapi.Contact(email="contact@swaggerBlog.local"),
-    license=openapi.License(name="Test License"),
+    contact=openapi.Contact(email="vanderson.santos@usp.br"),
+    license=openapi.License(name="MIT License"),
 )
 schema_view = get_schema_view(
     info=schema_info,
