@@ -1,10 +1,10 @@
-from django.http import HttpResponse, HttpRequest, JsonResponse
-from rest_framework.parsers import JSONParser
+from django.http import HttpRequest
 from ..model.student import Student
 from ..serializer.student import StudentSerializer
 from bson.objectid import ObjectId
 import uuid
 from rest_framework.views import APIView
+from ..util.response import ResponseHandler
 
 # Create your views here.
 from drf_yasg.utils import swagger_auto_schema
@@ -27,7 +27,7 @@ class StudentView(View):
         students = Student.objects.all()
         students_serializer=StudentSerializer(students,many=True)
         print(f'student_serializer = {students_serializer.data}')
-        return JsonResponse(students_serializer.data,safe=False)
+        return ResponseHandler.GetSuccess(students_serializer.data)
 
     @swagger_auto_schema(
             method='GET',
@@ -40,7 +40,7 @@ class StudentView(View):
             cpf_student = request.GET["cpf"]
             student = Student.objects.filter(cpf=cpf_student)
             students_serializer=StudentSerializer(student,many=True)
-            return JsonResponse(students_serializer.data,safe=False)
+            return ResponseHandler.GetSuccess(students_serializer.data)
 
     @swagger_auto_schema(
             method='POST',
@@ -53,14 +53,14 @@ class StudentView(View):
 
         if request.method == 'POST':
             student_data = JSONParser().parse(request)
-            student_data["student_id"] = uuid.uuid1()
+            student_data["id"] = uuid.uuid4()
             student_serializer=StudentSerializer(data=student_data)
             if student_serializer.is_valid():
                 student_serializer.save()
-                return JsonResponse("Added Student Successfully \n\r"+str(student_data),safe=False)
-            return JsonResponse("Failed to Add Student \n\r"+(str(student_serializer._errors)), safe=False)
+                return ResponseHandler.PostSuccess(str(student_data))
+            return ResponseHandler.PostFailure((str(student_serializer._errors)))
         
-        return JsonResponse("404",safe=False)
+        return ResponseHandler._404Response()
 
     @swagger_auto_schema(
             method='PUT',
@@ -78,10 +78,10 @@ class StudentView(View):
             student_serializer=StudentSerializer(student, data=student_data)
             if student_serializer.is_valid():
                 student_serializer.save()
-                return JsonResponse("Added Student Successfully \n\r "+str(student_data),safe=False)
-            return JsonResponse("Failed to Add Student \n\r"+str(student_data),safe=False)
+                return ResponseHandler.PutSuccess(str(student_data))
+            return ResponseHandler.PutFailure((str(student_serializer._errors)))
         
-        return JsonResponse("404",safe=False)
+        return ResponseHandler._404Response()
 
     @swagger_auto_schema(
             method='DELETE',
@@ -95,6 +95,6 @@ class StudentView(View):
             cpf_student = request.GET["cpf"]
             student=Student.objects.get(cpf=cpf_student)
             student.delete()
-            return JsonResponse("Delete Successfully \n\r"+str(cpf_student),safe=False)
+            return ResponseHandler.DeleteSuccess(str(cpf_student))
         
-        return JsonResponse("404",safe=False)
+        return ResponseHandler._404Response()
