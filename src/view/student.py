@@ -31,7 +31,7 @@ class StudentView(View):
 
     @swagger_auto_schema(
             method='GET',
-            operation_description="GET /student/get_one/",
+            operation_description="GET /student/get/",
             tags=[TAG_NAME],
             )
     @api_view(['GET'])
@@ -57,8 +57,8 @@ class StudentView(View):
             student_serializer=StudentSerializer(data=student_data)
             if student_serializer.is_valid():
                 student_serializer.save()
-                return JsonResponse("Added Successfully \n\r"+str(student_data),safe=False)
-            return JsonResponse("Failed to Add \n\r"+str(student_data),safe=False)
+                return JsonResponse("Added Student Successfully \n\r"+str(student_data),safe=False)
+            return JsonResponse("Failed to Add Student \n\r"+(str(student_serializer._errors)), safe=False)
         
         return JsonResponse("404",safe=False)
 
@@ -78,8 +78,8 @@ class StudentView(View):
             student_serializer=StudentSerializer(student, data=student_data)
             if student_serializer.is_valid():
                 student_serializer.save()
-                return JsonResponse("Added Successfully \n\r"+str(student_data),safe=False)
-            return JsonResponse("Failed to Add \n\r"+str(student_data),safe=False)
+                return JsonResponse("Added Student Successfully \n\r "+str(student_data),safe=False)
+            return JsonResponse("Failed to Add Student \n\r"+str(student_data),safe=False)
         
         return JsonResponse("404",safe=False)
 
