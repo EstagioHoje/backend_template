@@ -2,13 +2,15 @@ from django.db import models
 import uuid
 # from django.core.validators import MaxValueValidator
 
+class ContractData(models.Model):
+    start_date = models.CharField(max_length=100)
+    end_date = models.CharField(max_length=100)
+    def __str__(self):
+        return self.name
 class Report(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    # name = models.CharField(max_length=65)
-    # course = models.CharField(max_length=100)
-    # cpf = models.BigIntegerField(primary_key=True, unique=True)
     student_name = models.CharField(max_length=100)
     student_full_name = models.CharField(max_length=100)
     student_report = models.CharField(max_length=100)
@@ -16,8 +18,7 @@ class Report(models.Model):
     company_name = models.CharField(max_length=100)
     company_report = models.CharField(max_length=100)
 
-    # contract_data.start_date
-    # contract_data.end_date
+    contract_data = models.ForeignKey(ContractData, on_delete=models.CASCADE)
     
     company_cnpj = models.CharField(max_length=100)
     grade = models.CharField(max_length=100)

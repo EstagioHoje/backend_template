@@ -2,38 +2,49 @@ from django.db import models
 import uuid
 # from django.core.validators import MaxValueValidator
 
+class StudentData(models.Model):
+    name = models.CharField(max_length=100)
+    full_name = models.CharField(max_length=100)
+    university_id = models.UUIDField(default=uuid.uuid4, editable=False)
+    course = models.CharField(max_length=100)
+    rg = models.CharField(max_length=100)
+    cpf = models.CharField(max_length=100)
+    telephone = models.BigIntegerField()
+    email = models.CharField(max_length=100)
+    address = models.CharField(max_length=100)
+    number = models.IntegerField()
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    cep = models.IntegerField()
+    complement = models.CharField(max_length=100)
+    class_hours = models.IntegerField()    
+    
+    def __str__(self):
+        return self.name
+class CompanyData(models.Model):
+    name = models.CharField(max_length=100)
+    cnpj = models.CharField(max_length=100)
+    address = models.CharField(max_length=100)
+    number = models.BigIntegerField()
+    complement = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    cep = models.BigIntegerField()
+    field = models.CharField(max_length=100)
+    telephone = models.BigIntegerField()
+    email = models.CharField(max_length=100)
+    representative = models.CharField(max_length=100)
+    representative_job = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 class Contract(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # student_data.name
-    # student_data.full_name
-    # student_data.university_id
-    # student_data.course
-    # student_data.rg
-    # student_data.cpf
-    # student_data.telephone
-    # student_data.email
-    # student_data.address
-    # student_data.number
-    # student_data.city
-    # student_data.state
-    # student_data.cep
-    # student_data.complement
-    # student_data.class_hours
+    student_data = models.ForeignKey(StudentData, on_delete=models.CASCADE)
 
-    # company_data.name
-    # company_data.cnpj
-    # company_data.address
-    # company_data.number
-    # company_data.complement
-    # company_data.city
-    # company_data.state
-    # company_data.cep
-    # company_data.field
-    # company_data.telephone
-    # company_data.email
-    # company_data.representative
-    # company_data.representative_job
+    company_data = models.ForeignKey(CompanyData, on_delete=models.CASCADE)
 
     duration = models.IntegerField()
     start_date = models.CharField(max_length=100)
