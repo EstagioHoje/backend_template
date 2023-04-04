@@ -5,23 +5,23 @@ import uuid
 class Student(models.Model):
 
     id = models.UUIDField(default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=65)
+    name = models.CharField(max_length=100)
     course = models.CharField(max_length=100)
-    cpf = models.BigIntegerField(primary_key=True, unique=True)
-
+    cpf = models.CharField(primary_key=True, max_length=100)
     college = models.CharField(max_length=100)
-    entry_year = models.BigIntegerField()
+    entry_year = models.DateField()
     email = models.CharField(max_length=100)
-    resumee = models.CharField(max_length=100)
-    # university_id = 
-    telephone = models.BigIntegerField()
+    university = models.CharField(max_length=1000)
+    university_id = models.CharField(max_length=65)
+    class_schedule = models.JSONField()
+    telephone = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
-    cep = models.BigIntegerField()
+    cep = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
-    number = models.BigIntegerField()
+    number = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
-    complement = models.CharField(max_length=100)
-    full_name = models.CharField(max_length=100)
+    complement = models.CharField(max_length=100, blank=True, default='')
+    school = models.CharField(max_length=100)
 
     class Meta:
         managed = False
