@@ -1,7 +1,7 @@
 from django.http import HttpRequest, JsonResponse
 from rest_framework.parsers import JSONParser
 from ..model.company import Company
-from ..serializer.company import CompanySerializer
+from ..serializer.company import CompanySerializer, CNPJSerializer
 import uuid
 
 # Create your views here.
@@ -29,6 +29,7 @@ class CompanyView(View):
     @swagger_auto_schema(
             method='GET',
             operation_description="GET /company/get/",
+            query_serializer=CNPJSerializer,
             tags=[TAG_NAME],
             )
     @api_view(['GET'])
@@ -47,7 +48,6 @@ class CompanyView(View):
             )
     @api_view(['POST'])
     def post(request):
-        
         if request.method == 'POST':
             company_data = JSONParser().parse(request)
             company_data["company_id"] = uuid.uuid1()

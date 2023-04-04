@@ -3,6 +3,8 @@ from rest_framework.parsers import JSONParser
 from ..model.vacancy import Vacancy
 from ..serializer.vacancy import VacancySerializer
 import uuid
+from ..model.student import Student
+from ..serializer.vacancy import ApplySerializer
 
 # Create your views here.
 from drf_yasg.utils import swagger_auto_schema
@@ -93,5 +95,34 @@ class VacancyView(View):
             vacancy=Vacancy.objects.get(id=id_vacancy)
             vacancy.delete()
             return JsonResponse("Delete Successfully \n\r"+str(id_vacancy),safe=False)
+        
+        return JsonResponse("404",safe=False)
+
+    @swagger_auto_schema(
+            method='PUT',
+            operation_description="PUT /vacancy/apply/",
+            tags=[TAG_NAME],
+            query_serializer=ApplySerializer,
+            )
+    @api_view(['PUT'])
+    def apply(request):
+        if request.method == 'PUT':
+            id_vacancy = request.GET["id_vacancy"]
+            cpf_student = request.GET["cpf"]
+            from bson import ObjectId
+
+            vacancy = Vacancy.objects.filter(id=uuid.UUID(id_vacancy)) #uuid4
+            vacancy_serializer = VacancySerializer(vacancy)
+            # student_serializer = StudentSerializer(student).data
+
+            if ("cpfs" is not vacancy_serializer.data["candidates"]):
+                vacancy_serializer.data["candidates"]["cpfs"] = []
+                
+            vacancy_serializer.data["candidates"]["cpfs"].append(cpf_student)
+
+            if vacancy_serializer.is_valid():
+                vacancy_serializer.save()
+                return JsonResponse("Added Successfully \n\r"+str(vacancy_data),safe=False)
+            return JsonResponse("Failed to Add \n\r"+str(vacancy_data),safe=False)
         
         return JsonResponse("404",safe=False)

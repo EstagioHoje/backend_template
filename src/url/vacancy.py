@@ -16,4 +16,7 @@ urlpatterns = [
 
     # Delete a vacancy
     path('delete/', VacancyView.delete),
+
+    # 
+    path('apply/', VacancyView.apply),
 ]

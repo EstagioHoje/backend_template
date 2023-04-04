@@ -5,7 +5,7 @@ from django.views import View
 from drf_yasg.utils import swagger_auto_schema
 import uuid
 from ..model.report import Report
-from ..serializer.report import ReportSerializer, CPFSerializer
+from ..serializer.report import ReportSerializer, IdSerializer
 from ..util.response import ResponseHandler
 
 TAG_NAME = "Report"
@@ -26,14 +26,14 @@ class ReportView(View):
     @swagger_auto_schema(
             method='GET',
             operation_description="GET /report/get/",
-            query_serializer=CPFSerializer,
+            query_serializer=IdSerializer,
             tags=[TAG_NAME],
             )
     @api_view(['GET'])
     def get_one(request: HttpRequest):
         if request.method == 'GET':
-            cpf_report = request.GET["cpf"]
-            report = Report.objects.filter(cpf=cpf_report)
+            id_report = request.GET["id"]
+            report = Report.objects.filter(id=id_report)
             reports_serializer=ReportSerializer(report,many=True)
             return ResponseHandler.GetSuccess(reports_serializer.data)
 
@@ -45,52 +45,69 @@ class ReportView(View):
             )
     @api_view(['POST'])
     def post(request):
-
         if request.method == 'POST':
             report_data = JSONParser().parse(request)
             report_data["id"] = uuid.uuid4()
-            report_serializer=ReportSerializer(data=report_data)
+            report_serializer = ReportSerializer(data=report_data)
             if report_serializer.is_valid():
                 report_serializer.save()
                 return ResponseHandler.PostSuccess(str(report_data))
             return ResponseHandler.PostFailure((str(report_serializer._errors)))
-        
         return ResponseHandler._404Response()
 
     @swagger_auto_schema(
             method='PUT',
             request_body=ReportSerializer,
-            operation_description="PUT /report/post/",
+            operation_description="PUT /report/put/student/",
             tags=[TAG_NAME],
             )
     @api_view(['PUT'])
-    def put(request):
-
+    def put_student(request):
         if request.method == 'PUT':
             report_data = JSONParser().parse(request)
-            cpf_report = report_data["cpf"]
-            report=Report.objects.get(cpf=cpf_report)
-            report_serializer=ReportSerializer(report, data=report_data)
+            id_report = report_data["id"]
+            report = Report.objects.get(id= id_report)
+            report_serializer = ReportSerializer(report, data= report_data)
             if report_serializer.is_valid():
-                report_serializer.save()
+                report_serializer.save(update_fields=['student_report'])
                 return ResponseHandler.PutSuccess(str(report_data))
             return ResponseHandler.PutFailure((str(report_serializer._errors)))
-        
         return ResponseHandler._404Response()
 
     @swagger_auto_schema(
-            method='DELETE',
-            operation_description="DELETE /report/delete/",
-            query_serializer=CPFSerializer,
+            method='PUT',
+            request_body=ReportSerializer,
+            operation_description="PUT /report/put/company/",
             tags=[TAG_NAME],
             )
-    @api_view(['DELETE'])
-    def delete(request):
+    @api_view(['PUT'])
+    def put_company(request):
+        if request.method == 'PUT':
+            report_data = JSONParser().parse(request)
+            id_report = report_data["id"]
+            report = Report.objects.get(id= id_report)
+            report_serializer = ReportSerializer(report, data= report_data)
+            if report_serializer.is_valid():
+                report_serializer.save(update_fields=['company_report'])
+                return ResponseHandler.PutSuccess(str(report_data))
+            return ResponseHandler.PutFailure((str(report_serializer._errors)))
+        return ResponseHandler._404Response()
 
-        if request.method == 'DELETE':
-            cpf_report = request.GET["cpf"]
-            report=Report.objects.get(cpf=cpf_report)
-            report.delete()
-            return ResponseHandler.DeleteSuccess(str(cpf_report))
-        
+    @swagger_auto_schema(
+            method='PUT',
+            request_body=ReportSerializer,
+            operation_description="PUT /report/put/teacher/",
+            tags=[TAG_NAME],
+            )
+    @api_view(['PUT'])
+    def put_teacher(request):
+        if request.method == 'PUT':
+            report_data = JSONParser().parse(request)
+            id_report = report_data["id"]
+            report = Report.objects.get(id= id_report)
+            report_serializer = ReportSerializer(report, data= report_data)
+            if report_serializer.is_valid():
+                report_serializer.save(update_fields=['grade'])
+                return ResponseHandler.PutSuccess(str(report_data))
+            return ResponseHandler.PutFailure((str(report_serializer._errors)))
         return ResponseHandler._404Response()

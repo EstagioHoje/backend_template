@@ -9,4 +9,4 @@ class StudentSerializer(serializers.ModelSerializer):
 
 class CPFSerializer(serializers.Serializer): 
     # This is the one used in YASG's `query_serializer`
-    cpf = serializers.IntegerField()
+    cpf = serializers.CharField(max_length=100)

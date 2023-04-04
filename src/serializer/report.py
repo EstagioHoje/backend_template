@@ -7,6 +7,6 @@ class ReportSerializer(serializers.ModelSerializer):
         model=Report 
         fields="__all__" #("name", "course")
 
-class CPFSerializer(serializers.Serializer): 
+class IdSerializer(serializers.Serializer): 
     # This is the one used in YASG's `query_serializer`
-    cpf = serializers.IntegerField()
+    id = serializers.IntegerField()

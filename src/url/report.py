@@ -14,9 +14,12 @@ urlpatterns = [
     # Create a report
     path('post/', ReportView.post),
 
-    # Update a report
-    path('put/', ReportView.put),
+    # Student add report
+    path('put/student/', ReportView.put_student),
 
-    # Delete a report
-    path('delete/', ReportView.delete),
+    # Company add report
+    path('put/company/', ReportView.put_company),
+
+    # Teacher evaluate a report
+    path('put/teacher/', ReportView.put_teacher)
 ]
