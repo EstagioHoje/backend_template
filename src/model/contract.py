@@ -42,8 +42,10 @@ class Contract(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     student_data = models.JSONField() #models.ForeignKey(StudentData, on_delete=models.CASCADE)
-
+    student_cpf = models.CharField(max_length=100)
+    student_college = models.CharField(max_length=100)
     company_data = models.JSONField() #models.ForeignKey(CompanyData, on_delete=models.CASCADE)
+    company_cnpj = models.CharField(max_length=100)
 
     duration = models.IntegerField()
     start_date = models.DateField()

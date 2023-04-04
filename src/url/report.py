@@ -8,6 +8,16 @@ urlpatterns = [
     # Retrieve report list
     path('get/all', ReportView.get_all),
 
+
+        # Retrieve contract list
+    path('get/all_uni', ReportView.get_all_uni),
+
+        # Retrieve contract list
+    path('get/all_cpf', ReportView.get_all_cpf),
+
+        # Retrieve contract list
+    path('get/all_cnpj', ReportView.get_all_cnpj),
+
     # Retrieve report
     path('get/', ReportView.get_one),
 

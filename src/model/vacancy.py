@@ -15,8 +15,10 @@ class Vacancy(models.Model):
     requirements = models.CharField(max_length=100)
     company_grade = models.IntegerField()
     company_cnpj = models.CharField(max_length=100)
-    candidates = models.JSONField()
-    number_of_candidates = models.IntegerField(default = 0)
+    candidates = models.JSONField(default=dict(cpfs=[]),blank=True)
+
+    def number_of_candidates(self):
+        return len(self.candidates['cpfs'])
 
     class Meta:
         managed = False

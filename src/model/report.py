@@ -13,7 +13,7 @@ class Report(models.Model):
 
     student_name = models.CharField(max_length=100)
     student_cpf = models.CharField(max_length=100)
-    student_university = models.CharField(max_length=100)
+    student_college = models.CharField(max_length=100)
     student_school = models.CharField(max_length=100)
     student_report = models.CharField(max_length=10000)
 
@@ -22,7 +22,7 @@ class Report(models.Model):
     company_report = models.CharField(max_length=1000)
 
     contract_data = models.JSONField() # models.ForeignKey(ContractData, on_delete=models.CASCADE)
-    grade = models.BigIntegerField()
+    grade = models.IntegerField(blank=True, default=0)
 
     class Meta:
         managed = False

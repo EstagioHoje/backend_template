@@ -5,7 +5,8 @@ from django.views import View
 from drf_yasg.utils import swagger_auto_schema
 import uuid
 from ..model.report import Report
-from ..serializer.report import ReportSerializer, IdSerializer
+from ..serializer.report import ReportSerializer
+from ..serializer.report import CPFSerializer, IDSerializer, UNISerializer, CNPJSerializer
 from ..util.response import ResponseHandler
 
 TAG_NAME = "Report"
@@ -13,29 +14,72 @@ class ReportView(View):
 
     @swagger_auto_schema(
             method='GET',
-            operation_description="GET /report/get_all/",
+            operation_description="GET /report/get_all_cpf/",
+            tags=[TAG_NAME],
+            query_serializer=CPFSerializer,
+            )
+    @api_view(['GET'])
+    def get_all_cpf(request: HttpRequest):
+        cpf = request.GET["cpf"]
+        reports = Report.objects.filter(student_cpf=cpf)
+        reports_serializer=ReportSerializer(reports,many=True)
+        print(f'contract_serializer = {reports_serializer.data}')
+        return ResponseHandler.GetSuccess(reports_serializer.data)
+
+    @swagger_auto_schema(
+            method='GET',
+            operation_description="GET /report/get_all_cnpj/",
+            tags=[TAG_NAME],
+            query_serializer=CNPJSerializer,
+            )
+    @api_view(['GET'])
+    def get_all_cnpj(request: HttpRequest):
+        cnpj = request.GET["cnpj"]
+        reports = Report.objects.filter(company_cnpj=cnpj)
+        reports_serializer=ReportSerializer(reports,many=True)
+        print(f'contract_serializer = {reports_serializer.data}')
+        return ResponseHandler.GetSuccess(reports_serializer.data)
+    
+    @swagger_auto_schema(
+            method='GET',
+            operation_description="GET /contract/get_all_uni/",
+            tags=[TAG_NAME],
+            query_serializer=UNISerializer,
+            )
+    @api_view(['GET'])
+    def get_all_uni(request: HttpRequest):
+        uni = request.GET["uni"]
+        reports = Report.objects.filter(student_college=uni)
+        reports_serializer=ReportSerializer(reports,many=True)
+        print(f'contract_serializer = {reports_serializer.data}')
+        return ResponseHandler.GetSuccess(reports_serializer.data)
+
+    @swagger_auto_schema(
+            method='GET',
+            operation_description="GET /contract/get_all/",
             tags=[TAG_NAME],
             )
     @api_view(['GET'])
     def get_all(request: HttpRequest):
         reports = Report.objects.all()
         reports_serializer=ReportSerializer(reports,many=True)
-        print(f'report_serializer = {reports_serializer.data}')
+        print(f'contract_serializer = {reports_serializer.data}')
         return ResponseHandler.GetSuccess(reports_serializer.data)
 
     @swagger_auto_schema(
             method='GET',
-            operation_description="GET /report/get/",
-            query_serializer=IdSerializer,
+            operation_description="GET /contract/get/",
+            query_serializer=IDSerializer,
             tags=[TAG_NAME],
             )
     @api_view(['GET'])
     def get_one(request: HttpRequest):
         if request.method == 'GET':
-            id_report = request.GET["id"]
-            report = Report.objects.filter(id=id_report)
-            reports_serializer=ReportSerializer(report,many=True)
-            return ResponseHandler.GetSuccess(reports_serializer.data)
+            id = uuid.UUID(request.GET["id"])
+            contract = Report.objects.get(id=id)
+            report_serializer=ReportSerializer(contract)
+            return ResponseHandler.GetSuccess(report_serializer.data)
+
 
     @swagger_auto_schema(
             method='POST',

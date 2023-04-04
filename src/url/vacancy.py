@@ -5,8 +5,14 @@ urlpatterns = [
     # Retrieve vacancy list
     path('get/all', VacancyView.get_all),
 
+    # Retrieve vacancy list
+    path('get/all_cnpj/', VacancyView.get_all_cnpj),
+
+    # Retrieve vacancy list
+    path('get/candidates/', VacancyView.get_candidates),
+
     # Retrieve vacancy
-    path('get/', VacancyView.get_one),
+    path('getID/', VacancyView.get_one_id),
 
     # Create a vacancy
     path('post/', VacancyView.post),
