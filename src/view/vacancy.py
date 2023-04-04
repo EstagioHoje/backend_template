@@ -109,20 +109,19 @@ class VacancyView(View):
         if request.method == 'PUT':
             id_vacancy = request.GET["id_vacancy"]
             cpf_student = request.GET["cpf"]
-            from bson import ObjectId
 
-            vacancy = Vacancy.objects.filter(id=uuid.UUID(id_vacancy)) #uuid4
+            vacancy = Vacancy.objects.get(id=uuid.UUID(id_vacancy)) #uuid4
             vacancy_serializer = VacancySerializer(vacancy)
-            # student_serializer = StudentSerializer(student).data
 
-            if ("cpfs" is not vacancy_serializer.data["candidates"]):
+            if not("cpfs" in vacancy_serializer.data["candidates"]):
                 vacancy_serializer.data["candidates"]["cpfs"] = []
-                
             vacancy_serializer.data["candidates"]["cpfs"].append(cpf_student)
+
+            vacancy_serializer = VacancySerializer(vacancy,data=vacancy_serializer.data)
 
             if vacancy_serializer.is_valid():
                 vacancy_serializer.save()
-                return JsonResponse("Added Successfully \n\r"+str(vacancy_data),safe=False)
-            return JsonResponse("Failed to Add \n\r"+str(vacancy_data),safe=False)
+                return JsonResponse("Added Successfully \n\r"+str(cpf_student),safe=False)
+            return JsonResponse("Failed to Add \n\r"+str(cpf_student),safe=False)
         
         return JsonResponse("404",safe=False)
