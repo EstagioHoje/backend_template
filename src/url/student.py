@@ -11,6 +11,9 @@ urlpatterns = [
     # Retrieve student
     path('get/', StudentView.get_one),
 
+    # Retrieve student
+    path('get_company/', StudentView.get_company),
+
     # Create a student
     path('post/', StudentView.post),
 

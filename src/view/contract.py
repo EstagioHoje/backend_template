@@ -1,13 +1,15 @@
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser  
-from django.http import HttpRequest
+from django.http import HttpRequest, JsonResponse
 from django.views import View
 from drf_yasg.utils import swagger_auto_schema
 import uuid
 from ..model.contract import Contract
+from ..model.report import Report
 from ..serializer.contract import ContractSerializer, CPFSerializer
 from ..util.response import ResponseHandler
-from ..serializer.contract import CPFSerializer, IDSerializer, UNISerializer, CNPJSerializer
+from ..serializer.contract import CPFSerializer, IDSerializer, UNISerializer, CNPJSerializer, REJECTSerializer
+from ..serializer.report import ReportSerializer
 
 TAG_NAME = "Contract"
 class ContractView(View):
@@ -24,7 +26,7 @@ class ContractView(View):
         contracts = Contract.objects.filter(student_cpf=cpf)
         contracts_serializer=ContractSerializer(contracts,many=True)
         print(f'contract_serializer = {contracts_serializer.data}')
-        return ResponseHandler.GetSuccess(contracts_serializer.data)
+        return JsonResponse(contracts_serializer.data,safe=False)
 
     @swagger_auto_schema(
             method='GET',
@@ -38,7 +40,7 @@ class ContractView(View):
         contracts = Contract.objects.filter(company_cnpj=cnpj)
         contracts_serializer=ContractSerializer(contracts,many=True)
         print(f'contract_serializer = {contracts_serializer.data}')
-        return ResponseHandler.GetSuccess(contracts_serializer.data)
+        return JsonResponse(contracts_serializer.data,safe=False)
     
     @swagger_auto_schema(
             method='GET',
@@ -50,9 +52,11 @@ class ContractView(View):
     def get_all_uni(request: HttpRequest):
         uni = request.GET["uni"]
         contracts = Contract.objects.filter(student_college=uni)
+        contracts = contracts.exclude(status="a")
+        contracts = contracts.exclude(status="f")
         contracts_serializer=ContractSerializer(contracts,many=True)
         print(f'contract_serializer = {contracts_serializer.data}')
-        return ResponseHandler.GetSuccess(contracts_serializer.data)
+        return JsonResponse(contracts_serializer.data,safe=False)
 
     @swagger_auto_schema(
             method='GET',
@@ -78,7 +82,9 @@ class ContractView(View):
             id = uuid.UUID(request.GET["id"])
             contract = Contract.objects.get(id=id)
             contract_serializer=ContractSerializer(contract)
-            return ResponseHandler.GetSuccess(contract_serializer.data)
+            return JsonResponse(contract_serializer.data,safe=True)
+
+
 
     @swagger_auto_schema(
             method='POST',
@@ -91,7 +97,6 @@ class ContractView(View):
 
         if request.method == 'POST':
             contract_data = JSONParser().parse(request)
-            contract_data["id"] = uuid.uuid4()
             contract_serializer=ContractSerializer(data=contract_data)
             if contract_serializer.is_valid():
                 contract_serializer.save()
@@ -103,16 +108,123 @@ class ContractView(View):
     @swagger_auto_schema(
             method='PUT',
             request_body=ContractSerializer,
-            operation_description="PUT /contract/post/",
+            operation_description="PUT /contract/put/",
             tags=[TAG_NAME],
             )
     @api_view(['PUT'])
     def put(request):
+        
+        if request.method == 'PUT':
+            print("teste")
+            contract_data = JSONParser().parse(request)
+            id = uuid.UUID(contract_data["id"])
+            contract = Contract.objects.get(id=id)
+            contract_serializer=ContractSerializer(contract, data=contract_data)
+            if contract_serializer.is_valid():
+                contract_serializer.save()
+                return ResponseHandler.PutSuccess(str(contract_data))
+            return ResponseHandler.PutFailure((str(contract_serializer._errors)))
+        
+        return ResponseHandler._404Response()
+    
+    @swagger_auto_schema(
+            method='PUT',
+            operation_description="PUT /contract/sign_student/",
+            tags=[TAG_NAME],
+            query_serializer=IDSerializer,
+            )
+    @api_view(['PUT'])
+    def sign_student(request):
 
         if request.method == 'PUT':
-            contract_data = JSONParser().parse(request)
-            cpf_contract = contract_data["cpf"]
-            contract=Contract.objects.get(cpf=cpf_contract)
+            id = uuid.UUID(request.GET["id"])
+            contract = Contract.objects.get(id=id)
+            contract_serializer=ContractSerializer(contract)
+            contract_data = contract_serializer.data
+            contract_data["status"] = "b"
+            contract_serializer=ContractSerializer(contract, data=contract_data)
+            if contract_serializer.is_valid():
+                contract_serializer.save(update_fields=['status'])
+                return ResponseHandler.PutSuccess(str(contract_data))
+            return ResponseHandler.PutFailure((str(contract_serializer._errors)))
+        
+        return ResponseHandler._404Response()
+    
+    @swagger_auto_schema(
+            method='PUT',
+            operation_description="PUT /contract/sign_teacher/",
+            tags=[TAG_NAME],
+            query_serializer=IDSerializer,
+            )
+    @api_view(['PUT'])
+    def sign_teacher(request):
+
+        if request.method == 'PUT':
+            id = uuid.UUID(request.GET["id"])
+            contract = Contract.objects.get(id=id)
+            contract_serializer=ContractSerializer(contract)
+            contract_data = contract_serializer.data
+            contract_data["status"] = "c"
+            contract_serializer=ContractSerializer(contract, data=contract_data)
+            if contract_serializer.is_valid():
+                print(contract_data)
+                print(type(contract_data))
+                report_data = {
+                    "student_cpf": contract_data["student_cpf"],
+                    "student_college": contract_data["student_college"],
+                    "company_cnpj": contract_data["student_college"],
+                    "contract_data": contract_data
+                }
+                report_serializer = ReportSerializer(data=report_data)
+                if(report_serializer.is_valid()):
+                    report_serializer.save()
+                    contract_serializer.save()
+                    return ResponseHandler.PutSuccess(str(contract_data))
+                return ResponseHandler.PutFailure((str(report_serializer._errors)))
+            return ResponseHandler.PutFailure((str(contract_serializer._errors)))
+        
+        return ResponseHandler._404Response()
+    
+    @swagger_auto_schema(
+            method='PUT',
+            operation_description="PUT /contract/reject_student/",
+            tags=[TAG_NAME],
+            query_serializer=REJECTSerializer,
+            )
+    @api_view(['PUT'])
+    def reject_student(request):
+
+        if request.method == 'PUT':
+            id = uuid.UUID(request.GET["id"])
+            contract = Contract.objects.get(id=id)
+            contract_serializer=ContractSerializer(contract)
+            contract_data = contract_serializer.data
+            contract_data["status"] = "f"
+            contract_data["reject_reason"] = request.GET["reject_reason"]
+            contract_serializer=ContractSerializer(contract, data=contract_data)
+            if contract_serializer.is_valid():
+                contract_serializer.save()
+                return ResponseHandler.PutSuccess(str(contract_data))
+            return ResponseHandler.PutFailure((str(contract_serializer._errors)))
+        
+        return ResponseHandler._404Response()
+    
+    @swagger_auto_schema(
+            method='PUT',
+            operation_description="PUT /contract/reject_teacher/",
+            tags=[TAG_NAME],
+            query_serializer=REJECTSerializer,
+            )
+    @api_view(['PUT'])
+    def reject_teacher(request):
+
+        if request.method == 'PUT':
+            id = uuid.UUID(request.GET["id"])
+            contract = Contract.objects.get(id=id)
+            contract_serializer=ContractSerializer(contract)
+            contract_data = contract_serializer.data
+            contract_data["status"] = "g"
+            contract_data["reject_reason"] = request.GET["reject_reason"]
             contract_serializer=ContractSerializer(contract, data=contract_data)
             if contract_serializer.is_valid():
                 contract_serializer.save()
@@ -126,16 +238,16 @@ class ContractView(View):
     @swagger_auto_schema(
             method='DELETE',
             operation_description="DELETE /contract/delete/",
-            query_serializer=CPFSerializer,
+            query_serializer=IDSerializer,
             tags=[TAG_NAME],
             )
     @api_view(['DELETE'])
     def delete(request):
 
         if request.method == 'DELETE':
-            cpf_contract = request.GET["cpf"]
-            contract=Contract.objects.get(cpf=cpf_contract)
+            id = uuid.UUID(request.GET["id"])
+            contract = Contract.objects.get(id=id)
             contract.delete()
-            return ResponseHandler.DeleteSuccess(str(cpf_contract))
+            return ResponseHandler.DeleteSuccess(str(id))
         
         return ResponseHandler._404Response()

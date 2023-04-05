@@ -22,3 +22,8 @@ class UNISerializer(serializers.Serializer):
 class CNPJSerializer(serializers.Serializer): 
     # This is the one used in YASG's `query_serializer`
     cnpj = serializers.CharField(max_length=100)
+
+class REJECTSerializer(serializers.Serializer): 
+    # This is the one used in YASG's `query_serializer`
+    reject_reason = serializers.CharField(max_length=100)
+    id = serializers.CharField(max_length=100)

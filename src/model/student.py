@@ -11,9 +11,8 @@ class Student(models.Model):
     college = models.CharField(max_length=100)
     entry_year = models.DateField()
     email = models.CharField(max_length=100)
-    university = models.CharField(max_length=1000)
     university_id = models.CharField(max_length=65)
-    class_schedule = models.JSONField()
+    class_schedule = models.JSONField(blank=True)
     telephone = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
     cep = models.CharField(max_length=100)
@@ -22,6 +21,7 @@ class Student(models.Model):
     state = models.CharField(max_length=100)
     complement = models.CharField(max_length=100, blank=True, default='')
     school = models.CharField(max_length=100)
+    resumee = models.CharField(max_length=1000, blank=True, default='')
 
     class Meta:
         managed = False

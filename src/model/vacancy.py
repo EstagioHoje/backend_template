@@ -13,7 +13,7 @@ class Vacancy(models.Model):
     salary = models.CharField(max_length=100)
     description = models.CharField(max_length=1000)
     requirements = models.CharField(max_length=100)
-    company_grade = models.IntegerField()
+    company_grade = models.IntegerField(blank=True,default=0)
     company_cnpj = models.CharField(max_length=100)
     candidates = models.JSONField(default=dict(cpfs=[]),blank=True)
 

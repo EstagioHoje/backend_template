@@ -47,15 +47,14 @@ class Contract(models.Model):
     company_data = models.JSONField() #models.ForeignKey(CompanyData, on_delete=models.CASCADE)
     company_cnpj = models.CharField(max_length=100)
 
-    duration = models.IntegerField()
     start_date = models.DateField()
     end_date = models.DateField()
     weekly_hours = models.IntegerField()
     salary = models.IntegerField()
     transport_bonus = models.IntegerField()
-    status = models.CharField(max_length=100)
+    status = models.CharField(max_length=100, blank=True, default="a")
     description = models.CharField(max_length=1000)
-    intership_hours = models.JSONField()
+    intership_hours = models.JSONField(blank=True,default="{}")
     reject_reason = models.CharField(max_length=100, blank=True, default='')
 
     class Meta:

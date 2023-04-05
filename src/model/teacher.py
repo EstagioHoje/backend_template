@@ -8,9 +8,9 @@ class Teacher(models.Model):
     email = models.CharField(max_length=100)
     cpf = models.CharField(primary_key=True, max_length=100)
 
-    department = models.CharField(max_length=100)
+    department = models.CharField(max_length=100,blank=True,default="")
     school = models.CharField(max_length=100)
-    university = models.CharField(max_length=100)
+    college = models.CharField(max_length=100)
     university_id = models.CharField(max_length=100)
 
     class Meta:

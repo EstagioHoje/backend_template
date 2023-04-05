@@ -11,18 +11,16 @@ class Report(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    student_name = models.CharField(max_length=100)
     student_cpf = models.CharField(max_length=100)
     student_college = models.CharField(max_length=100)
-    student_school = models.CharField(max_length=100)
-    student_report = models.CharField(max_length=10000)
+    student_report = models.CharField(max_length=1000, blank=True, default="")
 
-    company_name = models.CharField(max_length=100)
     company_cnpj = models.CharField(max_length=100)
-    company_report = models.CharField(max_length=1000)
+    company_report = models.CharField(max_length=1000, blank=True, default="")
 
     contract_data = models.JSONField() # models.ForeignKey(ContractData, on_delete=models.CASCADE)
     grade = models.IntegerField(blank=True, default=0)
+
 
     class Meta:
         managed = False

@@ -4,7 +4,7 @@ class ResponseHandler:
 
     def GetSuccess(data):
         response = {
-            "menssage": "Get Successfully",
+            "message": "Get Successfully",
             "data": data
         }
         return ResponseHandler._Response(response)

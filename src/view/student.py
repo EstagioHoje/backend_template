@@ -5,7 +5,7 @@ from django.views import View
 from drf_yasg.utils import swagger_auto_schema
 import uuid
 from ..model.student import Student
-from ..serializer.student import StudentSerializer, CPFSerializer
+from ..serializer.student import StudentSerializer, CPFSerializer, COMPANYSerializer
 from ..util.response import ResponseHandler
 
 TAG_NAME = "Student"
@@ -34,6 +34,21 @@ class StudentView(View):
         if request.method == 'GET':
             cpf_student = request.GET["cpf"]
             student = Student.objects.filter(cpf=cpf_student)
+            students_serializer=StudentSerializer(student,many=True)
+            return ResponseHandler.GetSuccess(students_serializer.data)
+        
+    @swagger_auto_schema(
+            method='GET',
+            operation_description="GET /student/get_company/",
+            query_serializer=COMPANYSerializer,
+            tags=[TAG_NAME],
+            )
+    @api_view(['GET'])
+    def get_company(request: HttpRequest):
+        if request.method == 'GET':
+            id = uuid.UUID(request.GET["id"])
+            cpf_student = request.GET["cpf"]
+            student = Student.objects.filter(cpf=cpf_student,id=id)
             students_serializer=StudentSerializer(student,many=True)
             return ResponseHandler.GetSuccess(students_serializer.data)
 

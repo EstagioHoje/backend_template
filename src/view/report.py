@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser  
-from django.http import HttpRequest
+
+from django.http import HttpRequest, JsonResponse
 from django.views import View
 from drf_yasg.utils import swagger_auto_schema
 import uuid
@@ -24,7 +25,7 @@ class ReportView(View):
         reports = Report.objects.filter(student_cpf=cpf)
         reports_serializer=ReportSerializer(reports,many=True)
         print(f'contract_serializer = {reports_serializer.data}')
-        return ResponseHandler.GetSuccess(reports_serializer.data)
+        return JsonResponse(reports_serializer.data,safe=False)
 
     @swagger_auto_schema(
             method='GET',
@@ -91,7 +92,6 @@ class ReportView(View):
     def post(request):
         if request.method == 'POST':
             report_data = JSONParser().parse(request)
-            report_data["id"] = uuid.uuid4()
             report_serializer = ReportSerializer(data=report_data)
             if report_serializer.is_valid():
                 report_serializer.save()

@@ -10,3 +10,8 @@ class StudentSerializer(serializers.ModelSerializer):
 class CPFSerializer(serializers.Serializer): 
     # This is the one used in YASG's `query_serializer`
     cpf = serializers.CharField(max_length=100)
+
+class COMPANYSerializer(serializers.Serializer): 
+    # This is the one used in YASG's `query_serializer`
+    cpf = serializers.CharField(max_length=100)
+    id = serializers.CharField(max_length=100)
