@@ -87,7 +87,7 @@ DATABASES = {
         'NAME': 'estagio_hoje',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            'host': 'mongodb://mongodb_default:27017/estagio_hoje',
+            'host': 'mongodb://mongodb:27017/estagio_hoje',
         }
     },
     # 'student': {
