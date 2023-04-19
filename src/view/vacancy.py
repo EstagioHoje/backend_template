@@ -92,6 +92,7 @@ class VacancyView(View):
         
         if request.method == 'POST':
             vacancy_data = JSONParser().parse(request)
+
             vacancy_serializer=VacancySerializer(data=vacancy_data)
             if vacancy_serializer.is_valid():
                 vacancy_serializer.save()
@@ -153,16 +154,24 @@ class VacancyView(View):
 
             vacancy = Vacancy.objects.get(id=uuid.UUID(id_vacancy)) #uuid4
             vacancy_serializer = VacancySerializer(vacancy)
+            is_to_add_cpf = True
 
             if not("cpfs" in vacancy_serializer.data["candidates"]):
                 vacancy_serializer.data["candidates"]["cpfs"] = []
-            vacancy_serializer.data["candidates"]["cpfs"].append(cpf_student)
+            else:
+                if cpf_student in vacancy_serializer.data["candidates"]["cpfs"]:
+                    is_to_add_cpf = False
 
-            vacancy_serializer = VacancySerializer(vacancy,data=vacancy_serializer.data)
+            if is_to_add_cpf:
+                vacancy_serializer.data["candidates"]["cpfs"].append(cpf_student)
 
-            if vacancy_serializer.is_valid():
-                vacancy_serializer.save()
-                return JsonResponse("Added Successfully \n\r"+str(cpf_student),safe=False)
-            return JsonResponse("Failed to Add \n\r"+str(cpf_student),safe=False)
+                vacancy_serializer = VacancySerializer(vacancy,data=vacancy_serializer.data)
+
+                if vacancy_serializer.is_valid():
+                    vacancy_serializer.save()
+                    return JsonResponse("Added Successfully \n\r"+str(cpf_student),safe=False)
+                return JsonResponse("Failed to Add \n\r"+str(cpf_student),safe=False)
+            else:
+                return JsonResponse(f"Failed to Add \n\r cpf : {str(cpf_student)} already add",safe=False)
         
         return JsonResponse("404",safe=False)
