@@ -30,6 +30,12 @@ urlpatterns = [
     path('put/sign_student', ContractView.sign_student),
 
     # Retrieve contract list
+    path('put/sign_company', ContractView.sign_company),
+
+    # Retrieve contract list
+    path('put/reject_company', ContractView.reject_company),
+
+    # Retrieve contract list
     path('put/reject_student', ContractView.reject_student),
 
     # Retrieve contract list
