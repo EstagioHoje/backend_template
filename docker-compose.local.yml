@@ -14,6 +14,19 @@ services:
     networks:
       - backend
 
+  # mongodb_student:
+  #   container_name: bwt_mongodb_student
+  #   image: mongo
+  #   restart: unless-stopped
+  #   ports:
+  #     - 27019:27017
+  #   volumes:
+  #     - ./local_db/db_backup/mongorestore.sh:/docker-entrypoint-initdb.d/mongorestore.sh
+  #     - ./local_db/db_backup/dump:/dump
+  #   command: mongod --quiet --logpath /dev/null
+  #   networks:
+  #     - backend
+  
   backtend_website_template:
     container_name: bwt
     # build: .
@@ -50,6 +63,7 @@ services:
       - .:/usr/src/app/
     depends_on:
       - mongodb
+      # - mongodb_student
     networks:
       - backend
 

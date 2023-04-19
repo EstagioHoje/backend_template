@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'coreapi',
     'src',
@@ -45,6 +46,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE = (
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -53,6 +55,7 @@ MIDDLEWARE = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'cfg.urls'
 
@@ -78,22 +81,23 @@ REST_FRAMEWORK = {
 
 WSGI_APPLICATION = 'cfg.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
-# DB_NAME = 'mongodb://localhost:27018/estagio_hoje'
-
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'estagio_hoje',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            # 'host': 'mongodb://admin:admin@localhost:27017/estagio_hoje?authMechanism=SCRAM-SHA-1&authSource=admin&retryWrites=true&w=majority',
-            'host': 'mongodb://ec2-3-15-1-197.us-east-2.compute.amazonaws.com:27017/estagio_hoje',
+            'host': 'mongodb://mongodb_default:27017/estagio_hoje',
         }
-    }
+    },
+    # 'student': {
+    #     'ENGINE': 'djongo',
+    #     'NAME': 'estagio_hoje_student',
+    #     'ENFORCE_SCHEMA': False,
+    #     'CLIENT': {
+    #         'host': 'mongodb://mongodb_student:27017/estagio_hoje',
+    #     }
+    # }
 }
 
 # Password validation
