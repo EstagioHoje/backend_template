@@ -314,10 +314,13 @@ class ContractView(View):
             dict_student = dict(students_serializer.data[0])
             dict_company = dict(companys_serializer.data[0])
 
+
+
             contract_data["student_data"] = dict_student
             contract_data["company_data"] = dict_company
+            contract_data["student_college"] = dict_student["college"]
             contract_serializer=ContractSerializer(data=contract_data)
-            print(contract_data)
+            print(dict_student["college"])
             if contract_serializer.is_valid():
                 contract_serializer.save()
                 return ResponseHandler.PostSuccess(str(contract_data))
